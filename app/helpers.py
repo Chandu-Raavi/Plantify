@@ -39,8 +39,8 @@ def send_otp_reset(to_email, otp):
     server.quit()
 
 def send_otp_signup(to_email, otp):
-    sender_email = "chanduraavi118@gmail.com"
-    sender_password = "nfvc qkgt mmkr vqgp"
+    sender_email = "use  email id"
+    sender_password = "use password created for flask app"
 
     msg = MIMEMultipart()
     msg['From'] = sender_email
