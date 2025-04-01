@@ -1,7 +1,2 @@
-"# IOMP" 
-"# Plantify" 
-"# Plantify" 
-"# Plantify" 
-"# Plantify" 
-"# Plantify" 
-"# sample" 
+Plantify-Enhanced Medicinal Plant Identification 
+Using Convolutional Neural Networks 
