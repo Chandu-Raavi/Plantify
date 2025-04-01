@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Medicinal Plant Result{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2 class="text-center text-success fw-bold mb-3">Medicinal Plant Identification Result</h2>
+    
+    <div class="card shadow-lg p-3" style="background-color: #f5f5dc; border-radius: 15px;">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Prediction Details</h5>
+            <!-- Updated Try Another Prediction Button -->
+            <button type="button" id="tryAnotherBtn" class="btn btn-light btn-sm fw-bold">
+                🔄 Try Another Prediction
+            </button>
+        </div>
+
+        <div class="card-body text-center">
+            <p class="fw-bold">Uploaded Image:</p>
+            <img src="/static/uploads/{{ image_filename }}" alt="Uploaded Image" 
+                 class="img-thumbnail shadow-sm mb-2" 
+                 style="max-width: 250px; border-radius: 10px;">
+            
+            <p class="text-success fs-4 fw-bold mt-2">
+                🌿 Predicted Label: <span class="text-dark">{{ predicted_label }}</span><br>
+                <!--🔍 Confidence: <span class="text-dark">{{ prediction_prob }}</span>-->
+            </p>
+
+            <a href="{{ url_for('main.herbal_know', predicted_label=predicted_label) }}" 
+               class="btn btn-success btn-lg shadow-sm mt-2">
+                📖 Know More
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Form for Auto-Submission -->
+<form id="autoPredictForm" action="/api/predict/herbal" method="POST" enctype="multipart/form-data">
+    <input type="file" id="autoUploadInput" name="herbalImage" accept="image/*" style="display: none;">
+</form>
+
+<!-- JavaScript to Handle Auto-Submit -->
+<script>
+    document.getElementById("tryAnotherBtn").addEventListener("click", function () {
+        document.getElementById("autoUploadInput").click();
+    });
+
+    document.getElementById("autoUploadInput").addEventListener("change", function () {
+        if (this.files.length > 0) {
+            document.getElementById("autoPredictForm").submit();
+        }
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block title %}Plantify Wonders{% endblock %}
+
+{% block content %}
+<div class="container mt-4 text-center">
+    <h1 class="fw-bold text-success mb-2">🍃 Plantify Green Hub 🍃</h1>
+    <p class="text-muted mb-3">Discover the power of nature with medicinal plants and their healing benefits.</p>
+
+    <!-- Search Bar - Aligned Left -->
+    <div class="d-flex justify-content-start mb-3">
+        <div class="input-group w-auto">
+            <span class="input-group-text bg-success text-white"><i class="bi bi-search-heart"></i></span>
+            <input type="text" id="plantSearch" class="form-control rounded-pill" placeholder="Search for a plant..." onkeyup="searchPlants()">
+        </div>
+    </div>
+
+    <!-- Grid Layout -->
+    <div class="plant-grid" id="plantGrid">
+        {% for plant in plants %}
+        <div class="plant-item text-center">
+            <a href="{{ url_for('main.herbal_plant_detail', predicted_label=plant.description|urlencode) }}">
+                <div class="p-2">
+                    <img src="{{ url_for('static', filename='plant/' + plant.image_name) }}" 
+                         class="img-fluid rounded-circle animate-card plant-img">
+                    <p class="fw-bold text-success mt-2">{{ plant.description }}</p>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Search Functionality -->
+<script>
+    function searchPlants() {
+        let input = document.getElementById("plantSearch").value.toLowerCase();
+        let items = document.querySelectorAll(".plant-item");
+
+        items.forEach(item => {
+            let name = item.querySelector("p").innerText.toLowerCase();
+            if (name.includes(input)) {
+                item.style.display = "block";
+                item.classList.add("fade-in");
+            } else {
+                item.style.display = "none";
+                item.classList.remove("fade-in");
+            }
+        });
+    }
+</script>
+
+<!-- Custom Styles -->
+<style>
+    /* Grid Layout for Full Page */
+    .plant-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    /* Plant Image Styling */
+    .plant-img {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 50%;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    /* Hover Animation */
+    .plant-img:hover {
+        transform: scale(1.1);
+        box-shadow: 0px 10px 18px rgba(0, 128, 0, 0.3);
+    }
+
+    /* Remove underline from plant names */
+    .plant-item a {
+        text-decoration: none;
+    }
+
+    /* Smooth Fade-in Effect */
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 1200px) {
+        .plant-img { max-width: 250px; }
+    }
+
+    @media (max-width: 992px) {
+        .plant-img { max-width: 220px; }
+    }
+
+    @media (max-width: 768px) {
+        .plant-img { max-width: 180px; }
+        .d-flex.justify-content-md-end {
+            justify-content: center !important;
+        }
+        .input-group {
+            width: 100% !important;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .plant-img { max-width: 150px; }
+    }
+</style>
+{% endblock %}

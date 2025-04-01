@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Admin - Plant Approvals{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-primary fw-bold">✯ Admin - Approve Plant Submissions ✯</h1>
+
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{{ url_for('main.download_pending_plants') }}" class="btn btn-warning">💾 Download Pending Plants</a>
+    </div>
+
+    <div class="row" id="plantContainer">
+        {% for plant in plants %}
+        <div class="col-md-4 mb-4 plant-card" data-status="{{ plant.status }}">
+            <div class="card shadow-lg position-relative">
+                
+                <!-- Approve & Reject Buttons on Top -->
+                <div class="position-absolute top-0 start-0 m-2">
+                    <form method="POST" action="{{ url_for('main.approve_plant', plant_id=plant.id) }}">
+                        <button type="submit" class="btn btn-success btn-sm">✅ Approve</button>
+                    </form>
+                </div>
+                <div class="position-absolute top-0 end-0 m-2">
+                    <form method="POST" action="{{ url_for('main.reject_plant', plant_id=plant.id) }}">
+                        <button type="submit" class="btn btn-danger btn-sm">❌ Reject</button>
+                    </form>
+                </div>
+
+                <img src="{{ url_for('static', filename='plant/' + plant.image_name) }}" class="card-img-top" alt="Plant Image">
+                
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">🌱 {{ plant.common_name }}</h5>
+                    <p class="text-muted"><strong>Scientific Name:</strong> {{ plant.scientific_name }}</p>
+                    <p><strong>Description:</strong> {{ plant.description }}</p>
+                    <p><strong>Availability:</strong> {{ plant.availability }}</p>
+                    <p><strong>Climate:</strong> {{ plant.climate }}</p>
+                    <p><strong>Soil Type:</strong> {{ plant.soil }}</p>
+                    <p><strong>Origin:</strong> {{ plant.origin }}</p>
+                    <p><strong>Uses:</strong> {{ plant.uses }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- CSS for Button Placement -->
+<style>
+    .card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .card img {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .card-body {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Positioning Approve & Reject Buttons */
+    .position-absolute {
+        z-index: 10;
+    }
+
+    .btn-sm {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+        border-radius: 5px;
+    }
+</style>
+{% endblock %}

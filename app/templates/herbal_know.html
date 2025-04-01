@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block title %}{{ plant.description }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Buttons Container (Back & Download Buttons) -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="{{ url_for('predictions.predict_herbal') }}" class="btn btn-warning">
+            <i class="bi bi-arrow-clockwise"></i> Back
+        </a>
+        <button id="downloadPDF" class="btn btn-success">
+            <i class="bi bi-file-earmark-pdf"></i> 📄
+        </button>
+    </div>
+
+    <div class="d-flex d-print-none">
+        <!-- Fixed Image Section (Left) -->
+        <div class="fixed-image-container">
+            <img src="{{ url_for('static', filename='plant/' + plant.image_name) }}" 
+                 class="img-fluid rounded shadow-lg animate-image" 
+                 alt="{{ plant.common_name }}">
+        </div>
+
+        <!-- Scrollable Details Section (Right) -->
+        <div class="scrollable-details-container">
+            <div class="card shadow-lg p-4 rounded-3 border-0 bg-light">
+                <h2 class="fw-bold text-success">{{ plant.common_name }}</h2>
+                <hr>
+
+                <div class="plant-details">
+                    <p><i class="bi bi-info-circle text-primary"></i> <strong>Scientific Name:</strong> {{ plant.scientific_name }}</p>
+                    <p><i class="bi bi-info-circle text-primary"></i> <strong>Common Name:</strong> {{ plant.description }}</p>
+                    <p><i class="bi bi-geo-alt text-secondary"></i> <strong>Availability:</strong> {{ plant.availability }}</p>
+                    <p><i class="bi bi-brightness-high text-success"></i> <strong>Climate:</strong> {{ plant.climate }}</p>
+                    <p><i class="bi bi-tree text-info"></i> <strong>Soil Type:</strong> {{ plant.soil }}</p>
+                    <p><i class="bi bi-globe text-danger"></i> <strong>Origin:</strong> {{ plant.origin }}</p>
+                    <p><i class="bi bi-flower1 text-warning"></i> <strong>Uses:</strong> {{ plant.uses }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Content (Hidden for Normal View) -->
+    <div id="pdfContent" class="d-none d-print-block text-center">
+        <img src="{{ url_for('static', filename='plant/' + plant.image_name) }}" 
+             class="img-fluid rounded shadow-lg pdf-image" 
+             alt="{{ plant.common_name }}">
+        <h2 class="fw-bold text-success mt-2">{{ plant.common_name }}</h2>
+        <hr>
+        <div class="pdf-details text-left">
+            <p><strong>Scientific Name:</strong> {{ plant.scientific_name }}</p>
+            <p><strong>Common Name:</strong> {{ plant.description }}</p>
+            <p><strong>Availability:</strong> {{ plant.availability }}</p>
+            <p><strong>Climate:</strong> {{ plant.climate }}</p>
+            <p><strong>Soil Type:</strong> {{ plant.soil }}</p>
+            <p><strong>Origin:</strong> {{ plant.origin }}</p>
+            <p><strong>Uses:</strong> {{ plant.uses }}</p>
+        </div>
+    </div>
+
+    <div style="height: 80px;"></div>
+</div>
+
+<!-- PDF Download Script -->
+<script>
+    document.getElementById("downloadPDF").addEventListener("click", function () {
+        var originalContent = document.body.innerHTML; // Store full page content
+        var pdfContent = document.getElementById("pdfContent").innerHTML; // Get only necessary content
+
+        var style = `
+            <style>
+                @page { margin: 20mm; }
+                body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+                .pdf-image { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+                .pdf-details { text-align: justify; font-size: 14px; line-height: 1.5; }
+                .pdf-details p { margin-bottom: 8px; }
+            </style>
+        `;
+
+        document.body.innerHTML = style + pdfContent;
+        window.print();
+        document.body.innerHTML = originalContent;
+    });
+</script>
+
+<!-- Custom Styling -->
+<style>
+    .fixed-image-container {
+        width: 40%;
+        position: sticky;
+        top: 20px;
+        height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .scrollable-details-container {
+        width: 60%;
+        max-height: 80vh;
+        overflow-y: auto;
+        padding-left: 20px;
+    }
+
+    .animate-image {
+        transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+        border-radius: 10px;
+        max-width: 100%;
+        height: auto;
+    }
+
+    .animate-image:hover {
+        transform: scale(1.07);
+        box-shadow: 0px 12px 18px rgba(34, 139, 34, 0.3);
+    }
+
+    .plant-details p {
+        text-align: justify;
+        margin-bottom: 10px;
+    }
+
+    .card {
+        background: linear-gradient(180deg, #f9f9f9 10%, #eef2f5 100%);
+        border-radius: 12px;
+    }
+
+    #pdfContent {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .pdf-image {
+        max-width: 100%;
+        height: 200px;
+        object-fit: contain;
+    }
+
+    .pdf-details p {
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+</style>
+{% endblock %}

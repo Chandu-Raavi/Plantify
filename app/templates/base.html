@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Medicinal Plant{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #F5F5DC; /* Soft Beige Background */
+        }
+
+        .content-wrapper {
+            flex: 1;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: #006400 !important; /* Dark Green */
+            padding: 15px 0;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700 !important; /* Golden Yellow */
+        }
+
+        .navbar-nav .nav-link {
+            color: #F5F5DC !important; /* Soft Beige */
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #FFD700 !important; /* Golden Yellow */
+        }
+
+        /* Dropdown Custom Styling */
+        .dropdown-menu {
+            border-radius: 10px;
+            padding: 5px;
+            min-width: 140px;
+        }
+
+        /* Home Button */
+        .dropdown-item.bg-success {
+            background-color: #28A745 !important;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+            color: white !important;
+        }
+
+        .dropdown-item.bg-success:hover {
+            background-color: #218838 !important;
+        }
+
+        /* Logout Button */
+        .dropdown-item.bg-danger {
+            background-color: #DC3545 !important;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+            color: white !important;
+        }
+
+        .dropdown-item.bg-danger:hover {
+            background-color: #C82333 !important;
+        }
+
+        /* Flash Messages */
+        .flash-messages {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1050;
+            min-width: 350px;
+        }
+
+        .alert {
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #006400; /* Dark Green */
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">🌿 Plantify</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if session.get('admin') %}
+                        <li class="nav-item"><a class="nav-link" href="/admin_dashboard">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/manage_users">Manage Users</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/prediction_history">Prediction History</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/approve_plants">Plant Approval</a></li>
+                        <li class="nav-item"><a class="nav-link btn btn-danger text-white" href="/logout">Logout</a></li>
+                    {% elif user %}
+                        {% if user.status == 'active' %}
+                            <li class="nav-item"><a class="nav-link" href="/herbal_plants">Search</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/api/predict/herbal">Mediscan</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/diseases">Recipes</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/Dynamic">contribute Plants</a></li>
+                            <!--<li class="nav-item"><a class="nav-link" href="/feedback">Feedback</a></li>-->
+
+                            <!-- User Dropdown with Home and Logout -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="me-1">🧑‍💻</span> {{ user.name }}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                                    <li>
+                                        <a class="dropdown-item bg-success rounded mt-1" href="/dashboard">
+                                            📊 My Predictions
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item bg-danger rounded mt-1" href="/logout">
+                                            🚪 Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% elif user.status == 'archived' %}
+                            <li class="nav-item"><a class="nav-link btn btn-danger text-white" href="/logout">Logout</a></li>
+                            <li class="nav-item"><span class="navbar-text text-warning">Limited Access: Contact Admin</span></li>
+                        {% endif %}
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="/signin">Sign In</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/signup">Sign Up</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin_login">Admin Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ 'alert-' + category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="container content-wrapper mt-4">
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="footer mt-auto">
+        <p class="mb-0">🌱 <strong>Medicinal Plant Classification System | All Rights Reserved © 2025</strong></p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

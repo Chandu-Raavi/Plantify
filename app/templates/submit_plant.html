@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}Plantify - Submit Plant Details{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-success fw-bold">🌱 Submit Plant Details 🌱</h1>
+
+    <!-- Plant Submission Form -->
+    <div class="card shadow-lg p-4 mt-4">
+        <h4 class="fw-bold text-center">📋 Enter Plant Information</h4>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Description</label> <!-- ✅ Matches DB schema -->
+                <textarea name="description" class="form-control shadow-sm" placeholder="Enter plant description" rows="4" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Common Name</label> <!-- ✅ Matches DB schema -->
+                <input type="text" name="common_name" class="form-control shadow-sm" placeholder="Enter Common Name" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Scientific Name</label>
+                <input type="text" name="scientific_name" class="form-control shadow-sm" placeholder="Enter Scientific Name" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Availability</label>
+                <input type="text" name="availability" class="form-control shadow-sm" placeholder="E.g., Widely available, Rare" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Climate</label>
+                <input type="text" name="climate" class="form-control shadow-sm" placeholder="E.g., Tropical, Subtropical" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Soil</label> <!-- ✅ Matches DB schema -->
+                <input type="text" name="soil" class="form-control shadow-sm" placeholder="E.g., Loamy, Well-drained soil" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Origin</label>
+                <textarea name="origin" class="form-control shadow-sm" placeholder="Describe the native origin of the plant" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Uses</label> <!-- ✅ Matches DB schema -->
+                <textarea name="uses" class="form-control shadow-sm" placeholder="Describe the medicinal benefits" rows="4" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Upload Image</label>
+                <input type="file" name="image_name" class="form-control shadow-sm" accept="image/*" required>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Submit</button>
+        </form>
+    </div>
+
+    <!-- Disclaimer Section -->
+    <div class="card shadow-lg p-4 mt-4 text-center">
+        <h5 class="text-danger fw-bold">⚠ Disclaimer</h5>
+        <p>Submitted plant information will be reviewed before publication. Ensure that the details provided are accurate and verifiable.</p>
+    </div>
+
+    <div style="height: 80px;"></div>
+</div>
+
+<!-- Custom Styling -->
+<style>
+    .card {
+        background: #f9f9f9;
+        border-radius: 10px;
+    }
+</style>
+
+{% endblock %}

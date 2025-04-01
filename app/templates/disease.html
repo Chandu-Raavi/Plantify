@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}Plantify - Disease Information{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center text-success fw-bold">🍲 Home Remedies for Common Ailments 🍲</h1>
+
+    <!-- Disease Selection Form -->
+    <div class="card shadow-lg p-4 mt-4">
+        <h4 class="fw-bold text-center">🔍 Select a Condition</h4>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="disease" class="form-label fw-bold">Condition</label>
+                <select name="disease" class="form-select shadow-sm">
+                    {% for disease in diseases %}
+                    <option value="{{ disease.id }}" {% if selected_disease and selected_disease.id == disease.id %}selected{% endif %}>
+                        {{ disease.disease_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success w-100">View Details</button>
+        </form>
+    </div>
+
+    <!-- Disease Details -->
+    {% if selected_disease %}
+    <div class="card shadow-lg p-4 mt-5">
+        <h3 class="text-center text-primary fw-bold">{{ selected_disease.disease_name }}</h3>
+        <p><strong>📚 Description:</strong> {{ selected_disease.description }}</p>
+        <p><strong>🌱 Medicinal Plants Used:</strong> {{ selected_disease.medicinal_plants_used }}</p>
+        
+        <!-- Recipes with Proper Formatting -->
+        <p><strong>🌱 Remedies:</strong></p>
+        <ul>
+            {% for recipe in selected_disease.combination_description.split('\n') %}
+            <li>{{ recipe }}</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Plants Used Section -->
+        <h4 class="text-center text-warning mt-4">🌱 Recommended Plants</h4>
+        <div class="row text-center">
+            {% set plant_names = selected_disease.medicinal_plants_used.split(',') %}
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3">
+                    <h5 class="fw-bold">{{ plant_names[0] }}</h5>
+                    <img src="{{ url_for('static', filename='plant/' + selected_disease.image_name_one) }}" 
+                         class="img-fluid rounded shadow-lg" 
+                         alt="{{ plant_names[0] }}">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3">
+                    <h5 class="fw-bold">{{ plant_names[1] }}</h5>
+                    <img src="{{ url_for('static', filename='plant/' + selected_disease.image_name_two) }}" 
+                         class="img-fluid rounded shadow-lg" 
+                         alt="{{ plant_names[1] }}">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3">
+                    <h5 class="fw-bold">{{ plant_names[2] }}</h5>
+                    <img src="{{ url_for('static', filename='plant/' + selected_disease.image_name_three) }}" 
+                         class="img-fluid rounded shadow-lg" 
+                         alt="{{ plant_names[2] }}">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Disclaimer Section -->
+    <div class="card shadow-lg p-4 mt-4 text-center">
+        <h5 class="text-danger fw-bold">⚠ Disclaimer</h5>
+        <p>The information provided on this page is for general knowledge only. These natural remedies do not replace professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider for medical concerns. The above remedies are sourced from the book <strong>Compendium of Antiviral Medicinal Plants of North East India</strong>. 
+        <a href="{{ url_for('static', filename='plant/IBSD_Antiviral_Compendium_0.pdf') }}#page=7" target="_blank" class="text-primary fw-bold">CLICK TO VIEW THE BOOK</a>.</p>
+    </div>
+
+    <div style="height: 80px;"></div>
+</div>
+
+<!-- Custom Styling -->
+<style>
+    .card {
+        background: #f9f9f9;
+        border-radius: 10px;
+    }
+    .card img {
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    .card img:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 8px 16px rgba(0, 128, 0, 0.3);
+    }
+</style>
+
+{% endblock %}

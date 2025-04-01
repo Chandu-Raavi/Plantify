@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Predict Medicinal Plant{% endblock %}
+{% block content %}
+
+<div class="container text-center mt-4">
+    <h2 class="mb-4" style="color: #006400; font-weight: bold;">Image Based Identification</h2>
+
+    <form id="predictForm" action="/api/predict/herbal" method="POST" enctype="multipart/form-data" class="mt-4 needs-validation" novalidate style="display: block;">
+        <div class="upload-container" style="border: 2px solid #006400; border-radius: 10px; padding: 20px; display: inline-block;">
+            <!-- Upload Icon -->
+            <label for="herbalImage">
+                <img src="{{ url_for('static', filename='plant/mediscan.jpeg') }}" alt="Upload Icon"
+                    style="width: 150px; height: 150px; cursor: pointer;">
+            </label>
+            
+            <p class="mt-2">Click on the below button to upload an image from Camera / Gallery</p>
+            
+            <!-- File Input -->
+            <input type="file" id="herbalImage" name="herbalImage" accept="image/*" required style="display: none;">
+
+            <!-- Upload Button -->
+            <button type="button" id="uploadBtn" class="btn btn-success mt-2" style="background-color: #008000; border-color: #008000;">Upload Image</button>
+            <p id="fileNameDisplay" class="mt-2" style="color: gray;"></p>
+        </div>
+
+        <!-- Prediction Button -->
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary w-50" style="background-color: #008000; border-color: #008000;">Identify</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById("uploadBtn").addEventListener("click", function() {
+        document.getElementById("herbalImage").click();
+    });
+
+    document.getElementById("herbalImage").addEventListener("change", function() {
+        let fileInput = this;
+        let fileNameDisplay = document.getElementById("fileNameDisplay");
+        let uploadBtn = document.getElementById("uploadBtn");
+
+        if (fileInput.files.length > 0) {
+            fileNameDisplay.textContent = "Selected file: " + fileInput.files[0].name;
+            uploadBtn.innerText = "Change Image";
+        } else {
+            fileNameDisplay.textContent = "No file selected";
+            uploadBtn.innerText = "Upload Image";
+        }
+    });
+
+    document.getElementById("predictForm").addEventListener("submit", function(event) {
+        let fileInput = document.getElementById("herbalImage");
+        if (fileInput.files.length === 0) {
+            event.preventDefault();
+            alert("Please upload an image before predicting.");
+        }
+    });
+</script>
+
+{% endblock %}

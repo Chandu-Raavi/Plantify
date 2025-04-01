@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Home - Medicinal Plant Prediction{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero-section text-center text-white d-flex align-items-center justify-content-center" 
+    style="background: linear-gradient(135deg, #2A4D14, #3F7E44); height: 90vh; position: relative;">
+    <div class="container">
+        <h1 class="fw-bold display-3 animated fadeInDown">Medicinal Plant Identification</h1>
+        <p class="lead animated fadeInUp">AI-powered analysis & predictions for medicinal plants with high accuracy.</p>
+        <a href="/signin" class="btn btn-lg fw-bold animated fadeIn" 
+           style="background: #FFD700; color: #2A4D14; padding: 12px 25px; border-radius: 30px; font-size: 18px;">
+           Get Started
+        </a>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5" style="background-color: #E8F5E9;">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-4 text-dark">Why Choose Our System?</h2>
+        <p class="text-muted">Experience AI-driven medicinal plant analysis with enhanced accuracy.</p>
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="card feature-card shadow-lg border-0 p-4 text-center" style="background: #ffffff;">
+                    <i class="bi bi-search text-success feature-icon" style="font-size: 2rem;"></i>
+                    <h5 class="mt-3">Accurate Predictions</h5>
+                    <p>Our advanced AI models ensure precise medicinal plant classification.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card shadow-lg border-0 p-4 text-center" style="background: #ffffff;">
+                    <i class="bi bi-cloud-upload text-primary feature-icon" style="font-size: 2rem;"></i>
+                    <h5 class="mt-3">Easy Image Upload</h5>
+                    <p>Simply upload a plant image and get instant results with details.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card shadow-lg border-0 p-4 text-center" style="background: #ffffff;">
+                    <i class="bi bi-bar-chart-line text-danger feature-icon" style="font-size: 2rem;"></i>
+                    <h5 class="mt-3">Data-Driven Insights</h5>
+                    <p>Analyze plant characteristics, medicinal uses, and availability.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <img src="/static/images/herbal_overview.jpg" alt="Medicinal Plant Overview" class="img-fluid rounded shadow-lg">
+            </div>
+            <div class="col-md-6">
+                <h2 class="fw-bold text-dark">About Our Project</h2>
+                <p class="text-muted">Our AI-driven system helps identify and analyze medicinal plants. Leveraging deep learning and computer vision, it provides accurate predictions and detailed insights.</p>
+                <ul class="list-group">
+                    <li class="list-group-item border-0"><i class="bi bi-check-circle text-success"></i> Real-time plant analysis</li>
+                    <li class="list-group-item border-0"><i class="bi bi-check-circle text-success"></i> Medicinal uses & benefits</li>
+                    <li class="list-group-item border-0"><i class="bi bi-check-circle text-success"></i> Availability & distribution</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 text-center text-white" style="background: linear-gradient(135deg, #2A4D14, #3F7E44);">
+    <div class="container">
+        <h2 class="fw-bold">Get Started Today</h2>
+        <p class="lead">Experience AI-powered medicinal plant analysis.</p>
+        <a href="/signin" class="btn btn-lg fw-bold" 
+           style="background: #FFD700; color: #2A4D14; padding: 12px 25px; border-radius: 30px; font-size: 18px;">
+           Start Predicting
+        </a>
+    </div>
+</section>
+
+{% endblock %}

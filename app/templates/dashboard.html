@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1 class="mb-3 fw-bold">Welcome, <span class="text-primary">{{ user.name }}</span></h1>
+            <p>Status: <span class="badge bg-success px-3 py-2">{{ user.status }}</span></p>
+        </div>
+    </div>
+
+    <!-- Sort Dropdown -->
+    <div class="row mt-3">
+        <div class="col-md-4 offset-md-4 text-center">
+            <label for="sortPredictions" class="fw-bold">Sort By:</label>
+            <select id="sortPredictions" class="form-select shadow-sm">
+                <option value="latest" selected>Latest</option>
+                <option value="oldest">Oldest</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Prediction History Section -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h2 class="mb-3 text-center text-dark fw-bold">Prediction History</h2>
+
+            {% if predictions %}
+            <div class="row" id="predictionsContainer">
+                {% for prediction in predictions %}
+                <div class="col-md-4 prediction-card" data-timestamp="{{ prediction.created_at.timestamp() }}">
+                    <div class="card shadow-lg p-3 mb-4 border-0 rounded">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary fw-bold">
+                                {{ prediction.prediction_type }}
+                            </h5>
+                            <p class="text-muted"><i class="bi bi-clock"></i> 
+                                <span class="prediction-date">{{ prediction.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                            </p>
+                            <hr>
+                            <p><strong>Input Data:</strong> {{ prediction.input_data }}</p>
+                            <p><strong>Result:</strong> 
+                                <span class="badge 
+                                    {% if prediction.result == 'Positive' %}
+                                        bg-success
+                                    {% elif prediction.result == 'Negative' %}
+                                        bg-danger
+                                    {% else %}
+                                        bg-info
+                                    {% endif %}
+                                px-3 py-2">
+                                    {{ prediction.result }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted text-center">No prediction history found.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div style="height: 80px;"></div>
+</div>
+
+<!-- Custom Styling -->
+<style>
+    .card {
+        background: linear-gradient(180deg, #f9f9f9 10%, #eef2f5 100%);
+        border-radius: 12px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    h1, h2 {
+        font-weight: 700;
+    }
+
+    .badge {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .prediction-card {
+        transition: all 0.4s ease-in-out;
+    }
+</style>
+
+<!-- JavaScript for Sorting -->
+<script>
+    function sortPredictions() {
+        let sortOrder = document.getElementById("sortPredictions").value;
+        let container = document.getElementById("predictionsContainer");
+        let cards = Array.from(container.getElementsByClassName("prediction-card"));
+
+        // Sort based on the timestamp (latest to oldest or vice versa)
+        cards.sort(function(a, b) {
+            let timeA = parseFloat(a.getAttribute("data-timestamp"));
+            let timeB = parseFloat(b.getAttribute("data-timestamp"));
+            return sortOrder === "latest" ? timeB - timeA : timeA - timeB;
+        });
+
+        // Remove existing elements and append sorted elements back
+        container.innerHTML = "";
+        cards.forEach(card => container.appendChild(card));
+    }
+
+    document.getElementById("sortPredictions").addEventListener("change", sortPredictions);
+
+    // *Sort by "Latest" when the page loads*
+    window.onload = function() {
+        sortPredictions();  // Automatically sorts on page load
+    };
+</script>
+
+{% endblock %}

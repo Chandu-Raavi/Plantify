@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% block title %}{{ plant.description }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Buttons (Back, Download & Language Selection) -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="{{ url_for('main.herbal_plants') }}" class="btn btn-success">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+
+        <div class="d-flex gap-2"> <!-- Added spacing using gap-2 -->
+            <button id="downloadPDF" class="btn btn-success">
+                <i class="bi bi-file-earmark-pdf"></i> 📄 
+            </button>
+
+            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                🌐 
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" onclick="translateContent('en')">English</a></li>
+                <li><a class="dropdown-item" href="#" onclick="translateContent('te')">తెలుగు</a></li>
+                <li><a class="dropdown-item" href="#" onclick="translateContent('hi')">हिंदी</a></li>
+                <li><a class="dropdown-item" href="#" onclick="translateContent('kn')">ಕನ್ನಡ</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 📝 PDF Content Wrapper -->
+    <div id="pdfContent">
+        <div class="d-flex">
+            <!-- Image (Left) -->
+            <div class="fixed-image-container">
+                <img src="{{ url_for('static', filename='plant/' + plant.image_name) }}" 
+                     class="img-fluid rounded shadow-lg animate-image" 
+                     alt="{{ plant.common_name }}">
+            </div>
+
+            <!-- Details (Right) -->
+            <div class="scrollable-details-container">
+                <div class="card shadow-lg p-4 rounded-3 border-0 bg-light">
+                    <h2 class="fw-bold text-success" id="common_name" data-original-text="{{ plant.common_name }}">{{ plant.common_name }}</h2>
+                    <hr>
+
+                    <div class="plant-details">
+                        <p><strong id="scientific_name_label">Scientific Name:</strong> <span id="scientific_name" data-original-text="{{ plant.scientific_name }}">{{ plant.scientific_name }}</span></p>
+                        <p><strong id="common_name_label">Common Name:</strong> <span id="description" data-original-text="{{ plant.description }}">{{ plant.description }}</span></p>
+                        <p><strong id="availability_label">Availability:</strong> <span id="availability" data-original-text="{{ plant.availability }}">{{ plant.availability }}</span></p>
+                        <p><strong id="climate_label">Climate:</strong> <span id="climate" data-original-text="{{ plant.climate }}">{{ plant.climate }}</span></p>
+                        <p><strong id="soil_label">Soil Type:</strong> <span id="soil" data-original-text="{{ plant.soil }}">{{ plant.soil }}</span></p>
+                        <p><strong id="origin_label">Origin:</strong> <span id="origin" data-original-text="{{ plant.origin }}">{{ plant.origin }}</span></p>
+                        <p><strong id="uses_label">Uses:</strong> <span id="uses" data-original-text="{{ plant.uses }}">{{ plant.uses }}</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="height: 80px;"></div>
+</div>
+
+<!-- ✅ Include html2pdf.js -->
+
+<script>
+    document.getElementById("downloadPDF").addEventListener("click", function () {
+        var originalContent = document.body.innerHTML; // Store the full page content
+        var pdfContent = document.getElementById("pdfContent").innerHTML; // Get only the required content
+
+        var style = `
+            <style>
+                @page { margin: 20mm; }
+                body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+                .pdf-image { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+                .pdf-details { text-align: justify; font-size: 14px; line-height: 1.5; }
+                .pdf-details p { margin-bottom: 8px; }
+            </style>
+        `;
+
+        document.body.innerHTML = style + pdfContent;
+        window.print();
+        document.body.innerHTML = originalContent;
+    });
+</script>
+
+<!-- 🌍 Improved Translation Script -->
+<script>
+    const translations = {
+        "en": {
+            "scientific_name_label": "Scientific Name:",
+            "common_name_label": "Common Name:",
+            "availability_label": "Availability:",
+            "climate_label": "Climate:",
+            "soil_label": "Soil Type:",
+            "origin_label": "Origin:",
+            "uses_label": "Uses:"
+        },
+        "hi": {
+            "scientific_name_label": "वैज्ञानिक नाम:",
+            "common_name_label": "सामान्य नाम:",
+            "availability_label": "उपलब्धता:",
+            "climate_label": "जलवायु:",
+            "soil_label": "मृदा प्रकार:",
+            "origin_label": "उत्पत्ति:",
+            "uses_label": "उपयोग:"
+        },
+        "te": {
+            "scientific_name_label": "శాస్త్రీయ పేరు:",
+            "common_name_label": "సాధారణ పేరు:",
+            "availability_label": "లభ్యత:",
+            "climate_label": "వాతావరణం:",
+            "soil_label": "నేల రకం:",
+            "origin_label": "మూలం:",
+            "uses_label": "ఉపయోగాలు:"
+        },
+        "kn": {
+            "scientific_name_label": "ವೈಜ್ಞಾನಿಕ ಹೆಸರು:",
+            "common_name_label": "ಸಾಮಾನ್ಯ ಹೆಸರು:",
+            "availability_label": "ಲಭ್ಯತೆ:",
+            "climate_label": "ಹವಾಮಾನ:",
+            "soil_label": "ಮಣ್ಣಿನ ಪ್ರಕಾರ:",
+            "origin_label": "ಮೂಲ:",
+            "uses_label": "ಬಳಕೆ:"
+        }
+    };
+
+    function translateContent(lang) {
+        let elements = ["common_name", "scientific_name", "description", "availability", "climate", "soil", "origin", "uses"];
+
+        let labels = {
+            "scientific_name_label": document.getElementById("scientific_name_label"),
+            "common_name_label": document.getElementById("common_name_label"),
+            "availability_label": document.getElementById("availability_label"),
+            "climate_label": document.getElementById("climate_label"),
+            "soil_label": document.getElementById("soil_label"),
+            "origin_label": document.getElementById("origin_label"),
+            "uses_label": document.getElementById("uses_label")
+        };
+
+        // Translate labels
+        if (translations[lang]) {
+            Object.keys(labels).forEach(key => {
+                if (labels[key]) {
+                    labels[key].innerText = translations[lang][key];
+                }
+            });
+        }
+
+        // Translate content dynamically
+        elements.forEach(id => {
+            let textElement = document.getElementById(id);
+            let originalText = textElement.getAttribute("data-original-text");
+
+            fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${lang}&dt=t&q=${encodeURIComponent(originalText)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data[0] && data[0][0] && data[0][0][0]) {
+                    textElement.innerText = data[0][0][0];
+                }
+            })
+            .catch(error => console.error("Translation error:", error));
+        });
+    }
+</script>
+
+<!-- 💅 Custom Styling -->
+<style>
+    .fixed-image-container {
+        width: 40%;
+        position: sticky;
+        top: 20px;
+        height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .scrollable-details-container {
+        width: 60%;
+        max-height: 80vh;
+        overflow-y: auto;
+        padding-left: 20px;
+    }
+
+    .animate-image {
+        transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+        border-radius: 10px;
+        max-width: 100%;
+        height: auto;
+    }
+
+    .animate-image:hover {
+        transform: scale(1.07);
+        box-shadow: 0px 12px 18px rgba(34, 139, 34, 0.3);
+    }
+
+    .plant-details p, .plant-origin p {
+        text-align: justify;
+        margin-bottom: 10px;
+    }
+
+    .card {
+        background: linear-gradient(180deg, #f9f9f9 10%, #eef2f5 100%);
+        border-radius: 12px;
+    }
+
+    #pdfContent {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .pdf-image {
+        max-width: 100%;
+        height: 200px;
+        object-fit: contain;
+    }
+
+    .pdf-details p {
+        margin-bottom: 5px;
+        font-size: 14px;
+
+    }
+</style>
+
+{% endblock %}
